@@ -138,13 +138,19 @@ impl VGABuffer {
         }
     }
 
-    pub fn write_fmt_text_to_buf(
+    pub fn write_fmt_text_to_buf<FG, BG, BL>
+    (
         &mut self, 
         text: &str, 
-        fg_color: ForegroundColor, 
-        bg_color:BackgroundColor, 
-        blink: bool) 
-    -> Result<(), VGAError> {
+        fg_color: FG, 
+        bg_color: BG, 
+        blink: BL) 
+    -> Result<(), VGAError>
+    where
+        FG: Into<Option<ForegroundColor>> + Copy,
+        BG: Into<Option<BackgroundColor>> + Copy,
+        BL: Into<Option<bool>> + Copy,
+    {
         if !text.is_ascii() {
             Err(VGAError::InvalidASCIIError)
         } else {
@@ -152,9 +158,9 @@ impl VGABuffer {
                 let ascii_ch = unsafe { core::ascii::Char::from_u8_unchecked(ch as u8) };
                 let screen_ch = ScreenCharacter::new(
                     ascii_ch, 
-                    fg_color, 
-                    bg_color,
-                    blink
+                    fg_color.into().unwrap_or(ForegroundColor::default()), 
+                    bg_color.into().unwrap_or(BackgroundColor::default()),
+                    blink.into().unwrap_or(false),
                 );
                 self.write_char_to_buf(screen_ch)?;
             }
