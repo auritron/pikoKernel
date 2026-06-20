@@ -3,7 +3,7 @@
 all: run
 
 build:
-	cargo build -Zjson-target-spec
+	CARGO_INCREMENTAL=0 cargo build -Zjson-target-spec
 
 boot.o: src/boot.asm
 	nasm -f elf32 src/boot.asm -o boot.o

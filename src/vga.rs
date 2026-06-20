@@ -1,19 +1,20 @@
 use core::{ascii::Char, mem::MaybeUninit};
 use core::ptr::{write, write_volatile};
 
-const BUFFER_WIDTH: usize = 80;
-const BUFFER_HEIGHT: usize = 25;
+pub const BUFFER_WIDTH: usize = 80;
+pub const BUFFER_HEIGHT: usize = 25;
 const BUFFER_CAPACITY: usize = BUFFER_WIDTH * BUFFER_HEIGHT;
 
 type Buffer = [[MaybeUninit<ScreenCharacter>; BUFFER_WIDTH]; BUFFER_HEIGHT];
 
 #[repr(C)]
-struct VGABuffer {
+pub struct VGABuffer {
     buffer: Buffer,
     row_pos: usize,
     col_pos: usize,
 }
 
+#[derive(Debug, Clone, Copy)]
 #[repr(C, align(2))]
 struct ScreenCharacter {
     ascii_char: u8,
@@ -22,7 +23,7 @@ struct ScreenCharacter {
 
 #[derive(Default, Debug, Clone, Copy)]
 #[repr(u8)]
-enum VGAError {
+pub enum VGAError {
     #[default] UnknownError,
     WriteError,
     InvalidASCIIError,
@@ -91,7 +92,7 @@ impl ScreenCharacter {
 
 impl VGABuffer {
 
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             buffer: [[MaybeUninit::uninit(); BUFFER_WIDTH]; BUFFER_HEIGHT],
             row_pos: 0,
@@ -173,7 +174,7 @@ impl VGABuffer {
                     .get_unchecked_mut(i)
                     .get_unchecked_mut(j) 
                     as *mut u16;
-                let value = core::ptr::read_volatile(srcl_ptr);
+                let value = core::ptr::read_volatile(src_ptr);
                 core::ptr::write_volatile(dst_ptr, value);
             }
         }
