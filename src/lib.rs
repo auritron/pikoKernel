@@ -5,6 +5,12 @@
 mod panichandler;
 mod vga_buffer;
 
+pub mod arch {
+    pub mod i686 {
+        pub mod vga;
+    }
+}
+
 use vga_buffer::*;
 use vga_buffer::ForegroundColor::*;
 
