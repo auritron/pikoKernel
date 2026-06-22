@@ -5,8 +5,8 @@ all: run
 build:
 	CARGO_INCREMENTAL=0 cargo build -Zjson-target-spec
 
-boot.o: src/boot.asm
-	nasm -f elf32 src/boot.asm -o boot.o
+boot.o: src/arch/i686/boot.asm
+	nasm -f elf32 src/arch/i686/boot.asm -o boot.o
 
 link: build boot.o
 	ld -m elf_i386 -n -T linker.ld -o kernel.bin boot.o target/i686-unknown-none/debug/libpikoKernel.a

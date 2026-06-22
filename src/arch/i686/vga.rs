@@ -1,6 +1,6 @@
 use core::arch;
 
-use crate::display::BUFFER_WIDTH;
+use crate::drivers::display::BUFFER_WIDTH;
 
 const PORT_INDEX: u16 = 0x3D4u16;
 const PORT_DATA: u16 = 0x3D5u16;
