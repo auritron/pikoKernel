@@ -1,7 +1,5 @@
 use core::arch;
 
-use crate::arch::i686::vga;
-
 static mut KERNEL_GDT: GDT = GDT::new_empty();
 static mut GDT_DESCRIPTOR: GDTPointer = GDTPointer { limit: 0 , base: 0 };
 
@@ -59,7 +57,7 @@ impl GDT {
         }
     }
     
-    pub unsafe fn initialize() {
+    pub unsafe fn initialize() -> (u16, u16) {
         unsafe {
             KERNEL_GDT = GDT {
                 null: GDTEntry::set_from_hex(0x0000000000000000),
@@ -112,7 +110,7 @@ impl GDT {
             GDT::flush(&raw const GDT_DESCRIPTOR);
 
             // check values of code and data segment registers (should be 0x08 and 0x10 respectively)
-            /*let cs: u16;
+            let cs: u16;
             let ds: u16;
             unsafe {
                 core::arch::asm!(
@@ -121,9 +119,8 @@ impl GDT {
                     out(reg) cs,
                     out(reg) ds,
                 );
+            (cs, ds)
             }
-
-            crate::drivers::display::println!();*/
 
         }
     }

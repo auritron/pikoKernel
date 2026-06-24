@@ -1,5 +1,6 @@
 use core::{ascii::Char, mem::MaybeUninit};
 use core::ptr::{write, write_volatile};
+use core::fmt;
 
 pub const BUFFER_WIDTH: usize = 80;
 pub const BUFFER_HEIGHT: usize = 25;
@@ -284,3 +285,26 @@ impl VGABuffer {
     }
 
 }
+
+impl fmt::Write for VGABuffer {
+
+    fn write_str(&mut self, s: &str) -> fmt::Result { // debugging purpose only for now
+        self.write_fmt_text_to_buf(s, None, None, None)
+            .map_err(|_| fmt::Error)
+    }
+
+}
+
+macro_rules! write_and_flush {
+    ($buf:expr, $frame:expr, $fmt:expr $(, $($args:tt)*)?) => {
+        {
+            write!($buf, $fmt $(, $($args)*)?)
+                .map(|_| $buf.flush($frame))
+        }
+    };
+    ($($invalid:tt)*) => {
+        compile_error!("Invalid arguments passed to write_and_flush!");
+    };
+}
+
+pub(crate) use write_and_flush;
