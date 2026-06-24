@@ -3,7 +3,7 @@ use core::arch;
 static mut KERNEL_GDT: GDT = GDT::new_empty();
 static mut GDT_DESCRIPTOR: GDTPointer = GDTPointer { limit: 0 , base: 0 };
 
-#[repr(C, align(8))]
+#[repr(C, packed)]
 pub struct GDT {
     null: GDTEntry,
     kernel_code: GDTEntry,
