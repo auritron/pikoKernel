@@ -29,7 +29,7 @@ impl InterruptHandler {
     }
 
     #[unsafe(no_mangle)] pub extern "x86-interrupt" 
-    fn handle_gpf(_frame: InterruptStackFrame, err_code: u32) -> ! {    // 00D
+    fn handle_gpf(_frame: InterruptStackFrame, err_code: u32) -> ! {    // 0x0D
         let is_ext = (err_code & 0x1) == 1;
         let is_idt = (err_code >> 1 & 0x1) == 1;
         let is_ldt = (err_code >> 1 & 0x1) == 1;
@@ -38,6 +38,7 @@ impl InterruptHandler {
         let sel_idx = (err_code >> 3 & 0x1FFF);
 
         //print error msg
+        
 
         //panic
         panic!("Critical fault detected! INT: 0x0D");

@@ -1,6 +1,7 @@
 use core::{ascii::Char, mem::MaybeUninit};
 use core::ptr::{write, write_volatile};
 use core::fmt;
+//use core::cell::SyncUnsafeCell;
 
 pub const BUFFER_WIDTH: usize = 80;
 pub const BUFFER_HEIGHT: usize = 25;
@@ -212,13 +213,13 @@ impl VGAWriter {
 
 macro_rules! to_buf {
     ($buf:expr, $txt:expr) => {
-        to_buf!($buf, $txt, None, None, None)
+        $crate::drivers::display::to_buf!($buf, $txt, None, None, None)
     };
     ($buf:expr, $txt:expr, $fg:expr) => {
-        to_buf!($buf, $txt, $fg, None, None)
+        $crate::drivers::display::to_buf!($buf, $txt, $fg, None, None)
     };
     ($buf:expr, $txt:expr, $fg:expr, $bg:expr) => {
-        to_buf!($buf, $txt, $fg, $bg, None)
+        $crate::drivers::display::to_buf!($buf, $txt, $fg, $bg, None)
     };
     ($buf:expr, $txt:expr, $fg:expr, $bg:expr, $bl:expr) => {
         {
@@ -234,7 +235,7 @@ pub(crate) use to_buf;
 macro_rules! print {
     ($buf:expr, $frame:expr, $($args:tt)*) => {
         {
-            let res = to_buf!($buf, $($args)*);
+            let res = $crate::drivers::display::to_buf!($buf, $($args)*);
             if res.is_ok() {
                 unsafe { $buf.flush($frame); }
             }
@@ -242,7 +243,7 @@ macro_rules! print {
         }
     };
     ($($invalid:tt)*) => {
-        compile_error!("Invalid arguments passed to print!");
+        compile_error!("Invalid arguments passed to crate::drivers::display::print!");
     };
 }
 pub(crate) use print;
@@ -250,10 +251,10 @@ pub(crate) use print;
 macro_rules! println {
     ($buf:expr, $frame:expr, $($args:tt)*) => {
         {
-            let res = to_buf!($buf, $($args)*);
+            let res = $crate::drivers::display::to_buf!($buf, $($args)*);
             if res.is_ok() {
                 let nl_char = 
-                ScreenCharacter::new(
+                $crate::drivers::display::ScreenCharacter::new(
                     core::ascii::Char::LineFeed,
                     None,
                     None,
@@ -270,7 +271,7 @@ macro_rules! println {
         }
     };
     ($($invalid:tt)*) => {
-        compile_error!("Invalid arguments passed to println!");
+        compile_error!("Invalid arguments passed to crate::drivers::display::println!");
     };
 }
 pub(crate) use println;
@@ -304,20 +305,20 @@ impl fmt::Write for VGAWriter {
 }
 
 macro_rules! write_and_flush {
-    ($buf:expr, $frame:expr) => {
+    ($buf:expr, $frame:expr) => { 
         unsafe {
             $buf.flush($frame);
         }
     };
     ($buf:expr, $frame:expr, $fmt:expr $(, $($args:tt)*)?) => {
         {
-            write!($buf, $fmt $(, $($args)*)?)
+            use core::fmt::Write;
+            core::write!($buf, $fmt $(, $($args)*)?)
                 .map(|_| $buf.flush($frame))
         }
     };
     ($($invalid:tt)*) => {
-        compile_error!("Invalid arguments passed to write_and_flush!");
+        compile_error!("Invalid arguments passed to crate::drivers::display::write_and_flush!");
     };
 }
-
 pub(crate) use write_and_flush;

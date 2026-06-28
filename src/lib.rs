@@ -6,8 +6,12 @@
 #![feature(ascii_char_variants)]
 #![feature(abi_x86_interrupt)]
 
+#[macro_use]
 pub mod sys;
+
 pub mod arch;
+
+#[macro_use]
 pub mod drivers;
 
 #[unsafe(no_mangle)]

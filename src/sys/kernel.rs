@@ -8,6 +8,7 @@ use crate::sys;
 use crate::drivers::display::{VGAWriter, BUFFER_WIDTH, BUFFER_HEIGHT};
 use crate::arch::i686::vga;
 use crate::drivers::display::ScreenCharacter;
+use crate::sys::time;
 
 use core::fmt::Write;
 
@@ -47,8 +48,9 @@ pub fn main() -> ! {
         sys::console::println!(", what's up?", FGColor::Magenta);
         
 
-        /*time::delay_seconds(2);
-        local_buffer.clear_screen(frame);*/
+        time::delay_seconds(2);
+        panic!("asfdfasdfasgdewgw");
+        //local_buffer.clear_screen(frame);
     }
 
     loop {}
