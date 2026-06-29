@@ -1,7 +1,8 @@
-#[derive(Default, Debug, Clone, Copy)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u16)]
 enum Key {
-    None = 0x00u16, Esc = 0x01u16,
+    #[default] None = 0x00u16, 
+    Esc = 0x01u16,
     Num1 = 0x02u16, Num2 = 0x03u16, Num3 = 0x04u16, Num4 = 0x05u16, Num5 = 0x06u16,
     Num6 = 0x07u16, Num7 = 0x08u16, Num8 = 0x09u16, Num9 = 0x0Au16, Num0 = 0x0Bu16,
     Minus = 0x0Cu16, Equal = 0x0Du16, Bksp = 0x0Eu16, Tab = 0x0Fu16,

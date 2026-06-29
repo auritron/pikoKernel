@@ -4,6 +4,8 @@ use core::arch;
 const PIC_EOI: u8 = 0x20;
 const KBD_PORT: u16 = 0x60;
 
+pub const PIT_FREQ: usize = 1_193_182; // Hz
+
 pub struct InterruptHandler;
 
 #[repr(C)]
@@ -60,6 +62,7 @@ impl InterruptHandler {
                 options(nomem, nostack, preserves_flags)
             );
         }
+        crate::sys::time::SysTime::tick();
     }
 
     #[unsafe(no_mangle)] pub extern "x86-interrupt" 
