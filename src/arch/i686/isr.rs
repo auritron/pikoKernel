@@ -75,9 +75,10 @@ impl InterruptHandler {
                 out("al") scancode, 
                 options(nomem, nostack, preserves_flags)
             );
-            
-            //crate::sys::console::clear!();
-            //crate::sys::console::write_and_flush!("Key scancode: {:#X}", scancode);
+            //crate::arch::i686::kbd::Keyboard::update_keypress(scancode);
+            crate::sys::console::clear!();
+            crate::sys::console::write_and_flush!("Key: {:#X}", scancode);
+            //crate::sys::console::write_and_flush!("A");
             arch::asm!(
                 "out dx, al",
                 in("dx") crate::arch::i686::idt::PIC1_COMMAND,
